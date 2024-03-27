@@ -1,27 +1,49 @@
-const DomElement = function(sel, h, w, bg, fSize) {
-    this.selector = sel.substring(1, sel.length);
-    this.height = h+'px';
-    this.width = w+'px';
-    this.bg = bg;
-    this.fontSize = fSize+'px';
-    let elementPage;
-    this.createElem = function() {       
-        if (sel[0] === '.') {
-            elementPage = document.createElement('div');
-            elementPage.setAttribute('class', this.selector);                        
-        } else if (sel[0] === '#') {
-            elementPage = document.createElement('p');
-            elementPage.setAttribute('id', this.selector);                    
-        }
-        elementPage.style.cssText = `height:${this.height}; 
-                                    width:${this.width};    
-                                    background:${this.bg};
-                                    font-size:${this.fontSize}`;
-        elementPage.textContent = "Это текст нужен для примера";
-        document.body.insertAdjacentElement('afterend', elementPage);
-    };    
-};
+document.addEventListener('DOMContentLoaded', () => {
 
-const newElem = new DomElement('#block', 250, 400, 'green', 30);
+    'use strict';
+    const DomElement = function(selector, height, width, bg, fontSize) {
+        this.selector = selector.substring(1);
+        this.height = height+'px';
+        this.width = width+'px';
+        this.bg = bg;
+        this.fontSize = fontSize+'px';
+        this.top = 0;
+        this.left = 0;
+        let elementPage;
+        this.createElem = function() {       
+            if (selector[0] === '.') {
+                elementPage = document.createElement('div');
+                elementPage.setAttribute('class', this.selector);                        
+            } else if (selector[0] === '#') {
+                elementPage = document.createElement('p');
+                elementPage.setAttribute('id', this.selector);                    
+            }
+            elementPage.style.cssText = `height:${this.height}; 
+                                        width:${this.width};    
+                                        background:${this.bg};
+                                        font-size:${this.fontSize};
+                                        position:absolute;
+                                        top:${this.top}px;
+                                        left:${this.left}px`;
+            elementPage.textContent = "нажми кнопку со стрелочкой чтобы меня переместить";
+            document.body.insertAdjacentElement('afterend', elementPage);
+        };    
+    };
 
-newElem.createElem();
+    const newElem = new DomElement('.block', 100, 100, 'red', 16);
+    newElem.createElem();
+
+    const square = document.querySelector('.block');
+    let topIndent = parseInt(square.style.top);
+    let leftIndent = parseInt(square.style.left);    
+
+    document.addEventListener('keydown', (event)=> {
+        if (event.code === 'ArrowUp') topIndent -= 10;
+        if (event.code === 'ArrowDown') topIndent += 10;
+        if (event.code === 'ArrowLeft') leftIndent -= 10;
+        if (event.code === 'ArrowRight') leftIndent += 10;       
+        square.style.cssText += `top:${topIndent}px;
+                                left:${leftIndent}px`;        
+    });      
+});
+
